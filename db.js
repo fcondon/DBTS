@@ -9,6 +9,13 @@
 //          - update max streak (or not)
 //          - reset a streak
 
+function streak(user_id) {
+    this.user_id = user_id;
+    var time = new Date().getTime();
+    this.streak_count = 0;
+    this.max_streak = 0;
+    this.time = time;
+}
 
 var MongoClient = require('mongodb').MongoClient
     , format = require('util').format;
@@ -20,8 +27,8 @@ function log(path) {
 }
 
 function addStreak(user_id, callback) {
-    var time = new Date().getTime();
-    var new_streak = { 'user_id' : user_id, "streak_count" : 0, "max_streak" : 0, "time" : time};
+    var new_streak = new streak(user_id);
+    console.log("new streak: %o", new_streak);
     insert('streak_counts', new_streak, callback);
 }
 

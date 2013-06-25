@@ -1,7 +1,8 @@
 var http = require('http');
-var url = require("url");
+var url = require('url');
+var db = require("./db");
 
-function start(route, db) {
+function start(route) {
     http.createServer(function (request, response) {
       var pathname = url.parse(request.url).pathname;
       //console.log("Request for " + pathname);

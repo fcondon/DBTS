@@ -8,7 +8,7 @@ function start(route) {
       //console.log("Request for " + pathname);
       db.log(pathname);
 
-      route(pathname, db);
+      route(pathname);
 
       response.writeHead(200, {'Content-Type': 'text/plain'});
       response.end('Hello World\n');

@@ -9,12 +9,15 @@
 //          - update max streak (or not)
 //          - reset a streak
 
+var time_util = require("./time_util");
+
 function streak(user_id) {
+    var current_date = new Date();
+
     this.user_id = user_id;
-    var time = new Date().getTime();
+    this.date = time_util.getDate(current_date);
     this.streak_count = 0;
     this.max_streak = 0;
-    this.time = time;
 }
 
 var MongoClient = require('mongodb').MongoClient
@@ -46,6 +49,12 @@ function findStreak(user_id, callback) {
     });
 }
 
+function maybeResetStreak(streak) {
+    last_day = time_util.getLastStreakDate(streak.date, streak.streak_count);
+    console.log("loaded %s, last good streak day = %o", streak.user_id, last_day);
+    // TODO: do something real
+}
+
 function findOrCreateStreak(user_id, callback) {
     findStreak(user_id, function(doc) {
         if (doc) {
@@ -75,4 +84,5 @@ function insert(collection_name, insertion_data, callback) {
 
 exports.addStreak = addStreak;
 exports.findOrCreateStreak = findOrCreateStreak;
+exports.maybeResetStreak = maybeResetStreak;
 exports.log = log;

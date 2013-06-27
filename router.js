@@ -1,7 +1,9 @@
+var db = require("./db");
+
 var root = "/";
 var icon = "/favicon.ico";
 
-function route(pathname, db) {
+function route(pathname) {
     switch (pathname) {
         case icon:
             console.log("Should serve favicon");
@@ -12,13 +14,14 @@ function route(pathname, db) {
         default:
             var user_id = parseInt(pathname.substring(1));
             var record = db.findOrCreateStreak(user_id, function(record) {
-                logStreak(record); // do something real
+                logStreak(record);
             });
     }
 }
 
 function logStreak(record) {
     console.log("streak = " + record.streak_count);
+    db.maybeResetStreak(record);
 }
 
 exports.route = route;

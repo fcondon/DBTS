@@ -9,7 +9,7 @@
 //          - update max streak (or not)
 //          - reset a streak
 
-var time_util = require("./time_util");
+var time_util = require("./lib/time_util");
 
 function streak(user_id) {
     var current_date = new Date();

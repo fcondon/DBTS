@@ -15,7 +15,7 @@ function streak(user_id) {
     var current_date = new Date();
 
     this.user_id = user_id;
-    this.date = time_util.getDate(current_date);
+    this.date = time_util.getStorableDate(current_date);
     this.streak_count = 0;
     this.max_streak = 0;
 }
@@ -51,6 +51,7 @@ function findStreak(user_id, callback) {
 
 function maybeResetStreak(streak) {
     last_day = time_util.getLastStreakDate(streak.date, streak.streak_count);
+    time_util.getYesterday();
     console.log("loaded %s, last good streak day = %o", streak.user_id, last_day);
     // TODO: do something real
 }

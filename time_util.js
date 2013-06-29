@@ -23,11 +23,11 @@ function getLastStreakDate(start_date, streak_count) {
 
 // param Date
 function compareDates(date1, date2) {
-    var year_compare = compare(date1.getFullYear(), date2.getFullYear());
+    var year_compare = compareNumbers(date1.getFullYear(), date2.getFullYear());
     if (year_compare === 0) {
-        var month_compare = compare(date1.getMonth(), date2.getMonth());
+        var month_compare = compareNumbers(date1.getMonth(), date2.getMonth());
         if (month_compare === 0) {
-            return compare(date1.getDate(), date2.getDate());
+            return compareNumbers(date1.getDate(), date2.getDate());
         } else {
             return month_compare;
         }
@@ -36,22 +36,17 @@ function compareDates(date1, date2) {
 }
 
 // returns date
-function getYesterday() {
-    yesterday = new Date();
-    yesterday.setDate(date.getDate() - 1); // who knew?
-    return yesterday;
+function getYesterday(today) {
+    yesterday = today.setDate(today.getDate() - 1); // who knew?
+    return new Date(yesterday);
 }
 
-function compare(number1, number2) {
-    if (number1 > number2) {
-        return 1;
-    } else if (number1 < number2) {
-        return -1;
-    }
-    return 0;
+function compareNumbers(number1, number2) {
+    return number1 - number2;
 }
 
 exports.dateInfo = dateInfo;
 exports.compareDates = compareDates;
 exports.getStorableDate = getStorableDate;
 exports.getLastStreakDate = getLastStreakDate;
+exports.getYesterday = getYesterday;

@@ -30,7 +30,7 @@ function log(path) {
 }
 
 function addStreak(user_id, callback) {
-    var new_streak = new streak(user_id);
+    var new_streak = new streak(user_id); // TODO: wait for user input to create
     console.log("new streak: %o", new_streak);
     insert('streak_counts', new_streak, callback);
 }

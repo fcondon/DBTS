@@ -2,20 +2,18 @@
 //          - find or create streak for a user
 //          - handle new streak creation
 //          - handle existing streak lookup
+//          - check to see whether the streak needs to be reset
+//          - reset a streak
 
 //          TODO LIST:
-//          - check to see whether the streak needs to be reset
 //          - update a streak when a new day is clicked
 //          - update max streak (or not)
-//          - reset a streak
 
 var time_util = require("./lib/time_util");
 
 function streak(user_id) {
-    var current_date = new Date();
-
-    this.user_id = user_id;
-    this.date = time_util.getStorableDate(current_date);
+    this._id = user_id;
+    this.date = null;
     this.streak_count = 0;
     this.max_streak = 0;
 }
@@ -41,7 +39,7 @@ function addStreak(user_id, callback) {
 function findStreak(user_id, callback) {
     dbConnect(function(db) {
         var collection = db.collection('streak_counts');
-        var cursor = collection.find({ "user_id" : user_id }).nextObject(function(err, doc) {
+        var cursor = collection.find({ "_id" : user_id }).nextObject(function(err, doc) {
             if (err) throw err;
             if (callback) {
                 callback(doc);
@@ -55,7 +53,7 @@ function maybeResetStreak(streak) {
     if (streak.date) {
         last_day = time_util.getLastStreakDate(streak.date, streak.streak_count);
         yesterday = time_util.getYesterday(new Date());
-        console.log("loaded %s, last good streak day = ", streak.user_id, last_day);
+        console.log("loaded %s, last good streak day = ", streak._id, last_day);
         if (time_util.compareDates(yesterday, last_day) > 0) {
             resetStreak(streak);
         }
@@ -64,18 +62,20 @@ function maybeResetStreak(streak) {
 
 // params: streak
 function resetStreak(streak) {
+    console.log("Resetting streak " + streak._id);
     streak.date = null;
     streak.streak_count = 0;
-    updateStreak(streak);
+    saveStreak(streak);
 }
 
 // params: streak
-function updateStreak(streak) {
+function saveStreak(streak) {
     dbConnect(function(db) {
-         db.collection('streak_counts').insert(insertion_data, function(err, docs) {
+        var collection = db.collection('streak_counts');
+        collection.save(streak, function(err, doc) {
             if (err) throw err;
-            db.close();
-         });
+        });
+        db.close();
     });
 }
 

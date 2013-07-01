@@ -4,10 +4,13 @@
 //          - handle existing streak lookup
 //          - check to see whether the streak needs to be reset
 //          - reset a streak
-
-//          TODO LIST:
 //          - update a streak when a new day is clicked
 //          - update max streak (or not)
+
+//          TODO LIST:
+//          - write test suite to verify endpoints
+//          - refactor so maybeResetStreak doesn't need to be exported
+//          - add documentation of how the endpoints work
 
 var time_util = require("./lib/time_util");
 
@@ -49,6 +52,7 @@ function findStreak(user_id, callback) {
 }
 
 // params: streak
+// return: bool
 function maybeResetStreak(streak) {
     if (streak.date) {
         last_day = time_util.getLastStreakDate(streak.date, streak.streak_count);
@@ -56,8 +60,10 @@ function maybeResetStreak(streak) {
         console.log("loaded %s, last good streak day = ", streak._id, last_day);
         if (time_util.compareDates(yesterday, last_day) > 0) {
             resetStreak(streak);
+            return true;
         }
     }
+    return false;
 }
 
 // params: streak
@@ -92,6 +98,30 @@ function findOrCreateStreak(user_id, callback) {
     });
 }
 
+function updateStreak(user_id) {
+    findStreak(user_id, function(doc) {
+        if (doc) {
+            reset = maybeResetStreak(doc); // make sure streak is still valid
+            if (!reset) {
+                streak.streak_count = streak.streak_count + 1;
+                if (shouldUpdateMaxStreak(streak)) {
+                    streak.max_streak = streak.streak_count;
+                }
+                saveStreak(streak);
+            }
+        } else {
+            throw "No streak associated with id " + user_id;
+        }
+    });
+}
+
+// params: streak
+// return: bool
+function shouldUpdateMaxStreak(streak) {
+    return (streak.streak_count > streak.max_streak);
+}
+
+
 // params: string, object, function 
 function insert(collection_name, insertion_data, callback) {
     dbConnect(function(db) {
@@ -114,7 +144,7 @@ function dbConnect(callback) {
      });
 }
 
-exports.addStreak = addStreak;
 exports.findOrCreateStreak = findOrCreateStreak;
+exports.updateStreak = updateStreak;
 exports.maybeResetStreak = maybeResetStreak;
 exports.log = log;

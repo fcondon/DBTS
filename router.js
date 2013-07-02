@@ -1,4 +1,4 @@
-var db = require("./db");
+var streak_controller = require("./streak_controller");
 
 var root = "/";
 var icon = "/favicon.ico";
@@ -13,7 +13,7 @@ function route(pathname) {
             break;
         default:
             var user_id = parseInt(pathname.substring(1));
-            var record = db.findOrCreateStreak(user_id, function(record) {
+            var record = streak_controller.findOrCreateStreak(user_id, function(record) {
                 logStreak(record);
             });
     }
@@ -21,7 +21,7 @@ function route(pathname) {
 
 function logStreak(record) {
     console.log("streak = " + record.streak_count);
-    db.maybeResetStreak(record);
+    streak_controller.maybeResetStreak(record);
 }
 
 exports.route = route;

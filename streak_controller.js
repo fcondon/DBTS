@@ -6,13 +6,15 @@
 //          - reset a streak
 //          - update a streak when a new day is clicked
 //          - update max streak (or not)
+//          - refactor higher-level functionality into a streak_controller module
 
 //          TODO LIST:
-//          - write test suite to verify endpoints
 //          - refactor so maybeResetStreak doesn't need to be exported
+//          - write test suite to verify endpoints
 //          - add documentation of how the endpoints work
 
 var time_util = require("./lib/time_util");
+var db = require("./lib/db");
 
 function streak(user_id) {
     this._id = user_id;
@@ -21,27 +23,17 @@ function streak(user_id) {
     this.max_streak = 0;
 }
 
-var MongoClient = require('mongodb').MongoClient
-    , format = require('util').format;
-var db_path = 'mongodb://127.0.0.1:27017/streakdb';
-
-// params: string
-function log(path) {
-    var access_record = {'request' : path};
-    insert('access_logs', access_record);
-}
-
 // params: int, function
 function addStreak(user_id, callback) {
     var new_streak = new streak(user_id); // TODO: wait for user input to create
-    console.log("new streak: %o", new_streak);
-    insert('streak_counts', new_streak, callback);
+    console.log("new streak: ", new_streak);
+    insertStreak(new_streak, callback);
 }
 
 // params: int, function
 function findStreak(user_id, callback) {
-    dbConnect(function(db) {
-        var collection = db.collection('streak_counts');
+    db.connect(function(db_connection) {
+        var collection = db_connection.collection(db.streak_collection);
         var cursor = collection.find({ "_id" : user_id }).nextObject(function(err, doc) {
             if (err) throw err;
             if (callback) {
@@ -76,12 +68,12 @@ function resetStreak(streak) {
 
 // params: streak
 function saveStreak(streak) {
-    dbConnect(function(db) {
-        var collection = db.collection('streak_counts');
+    db.connect(function(db_connection) {
+        var collection = db_connection.collection(db.streak_collection);
         collection.save(streak, function(err, doc) {
             if (err) throw err;
         });
-        db.close();
+        db_connection.close();
     });
 }
 
@@ -122,29 +114,20 @@ function shouldUpdateMaxStreak(streak) {
 }
 
 
-// params: string, object, function 
-function insert(collection_name, insertion_data, callback) {
-    dbConnect(function(db) {
-        var collection = db.collection(collection_name);
+// params: string, object, function
+function insertStreak(insertion_data, callback) {
+    db.connect(function(db_connection) {
+        var collection = db_connection.collection(db.streak_collection);
         collection.insert(insertion_data, function(err, docs) {
             if (err) throw err;
             if (callback) {
                 callback(docs[0]);
             }
         });
-        db.close();
+        db_connection.close();
     });
-}
-
-// params: function
-function dbConnect(callback) {
-    MongoClient.connect(db_path, function(err, db) {
-        if (err) throw err;
-        callback(db);
-     });
 }
 
 exports.findOrCreateStreak = findOrCreateStreak;
 exports.updateStreak = updateStreak;
 exports.maybeResetStreak = maybeResetStreak;
-exports.log = log;

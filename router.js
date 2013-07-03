@@ -21,7 +21,6 @@ function route(pathname) {
 
 function logStreak(record) {
     console.log("streak = " + record.streak_count);
-    streak_controller.maybeResetStreak(record);
 }
 
 exports.route = route;

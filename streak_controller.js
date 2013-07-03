@@ -34,10 +34,10 @@ function addStreak(user_id, callback) {
 function findStreak(user_id, callback) {
     db.connect(function(db_connection) {
         var collection = db_connection.collection(db.streak_collection);
-        var cursor = collection.find({ "_id" : user_id }).nextObject(function(err, doc) {
+        var cursor = collection.find({ "_id" : user_id }).nextObject(function(err, streak) {
             if (err) throw err;
             if (callback) {
-                callback(doc);
+                callback(streak);
             }
         });
     });
@@ -70,7 +70,7 @@ function resetStreak(streak) {
 function saveStreak(streak) {
     db.connect(function(db_connection) {
         var collection = db_connection.collection(db.streak_collection);
-        collection.save(streak, function(err, doc) {
+        collection.save(streak, function(err, streak) {
             if (err) throw err;
         });
         db_connection.close();
@@ -79,21 +79,22 @@ function saveStreak(streak) {
 
 // params: int, function
 function findOrCreateStreak(user_id, callback) {
-    findStreak(user_id, function(doc) {
-        if (doc) {
-            callback(doc);
+    findStreak(user_id, function(streak) {
+        if (streak) {
+            maybeResetStreak(streak);
+            callback(streak);
         } else {
-            addStreak(user_id, function(doc) {
-                callback(doc);
+            addStreak(user_id, function(streak) {
+                callback(streak);
             });
         }
     });
 }
 
 function updateStreak(user_id) {
-    findStreak(user_id, function(doc) {
-        if (doc) {
-            reset = maybeResetStreak(doc); // make sure streak is still valid
+    findStreak(user_id, function(streak) {
+        if (streak) {
+            reset = maybeResetStreak(streak); // make sure streak is still valid
             if (!reset) {
                 streak.streak_count = streak.streak_count + 1;
                 if (shouldUpdateMaxStreak(streak)) {
@@ -118,10 +119,10 @@ function shouldUpdateMaxStreak(streak) {
 function insertStreak(insertion_data, callback) {
     db.connect(function(db_connection) {
         var collection = db_connection.collection(db.streak_collection);
-        collection.insert(insertion_data, function(err, docs) {
+        collection.insert(insertion_data, function(err, streaks) {
             if (err) throw err;
             if (callback) {
-                callback(docs[0]);
+                callback(streaks[0]);
             }
         });
         db_connection.close();
@@ -130,4 +131,3 @@ function insertStreak(insertion_data, callback) {
 
 exports.findOrCreateStreak = findOrCreateStreak;
 exports.updateStreak = updateStreak;
-exports.maybeResetStreak = maybeResetStreak;

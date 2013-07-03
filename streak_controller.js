@@ -27,20 +27,7 @@ function streak(user_id) {
 function addStreak(user_id, callback) {
     var new_streak = new streak(user_id); // TODO: wait for user input to create
     console.log("new streak: ", new_streak);
-    insertStreak(new_streak, callback);
-}
-
-// params: int, function
-function findStreak(user_id, callback) {
-    db.connect(function(db_connection) {
-        var collection = db_connection.collection(db.streak_collection);
-        var cursor = collection.find({ "_id" : user_id }).nextObject(function(err, streak) {
-            if (err) throw err;
-            if (callback) {
-                callback(streak);
-            }
-        });
-    });
+    db.insertStreak(new_streak, callback);
 }
 
 // params: streak
@@ -63,36 +50,23 @@ function resetStreak(streak) {
     console.log("Resetting streak " + streak._id);
     streak.date = null;
     streak.streak_count = 0;
-    saveStreak(streak);
-}
-
-// params: streak
-function saveStreak(streak) {
-    db.connect(function(db_connection) {
-        var collection = db_connection.collection(db.streak_collection);
-        collection.save(streak, function(err, streak) {
-            if (err) throw err;
-        });
-        db_connection.close();
-    });
+    db.saveStreak(streak);
 }
 
 // params: int, function
-function findOrCreateStreak(user_id, callback) {
-    findStreak(user_id, function(streak) {
+function getStreak(user_id, callback) {
+    db.findStreak(user_id, function(streak) {
         if (streak) {
             maybeResetStreak(streak);
             callback(streak);
         } else {
-            addStreak(user_id, function(streak) {
-                callback(streak);
-            });
+            console.log("Unrecognized id : " + user_id);
         }
     });
 }
 
-function updateStreak(user_id) {
-    findStreak(user_id, function(streak) {
+function incrementStreak(user_id) {
+    db.findStreak(user_id, function(streak) {
         if (streak) {
             reset = maybeResetStreak(streak); // make sure streak is still valid
             if (!reset) {
@@ -100,7 +74,7 @@ function updateStreak(user_id) {
                 if (shouldUpdateMaxStreak(streak)) {
                     streak.max_streak = streak.streak_count;
                 }
-                saveStreak(streak);
+                db.saveStreak(streak);
             }
         } else {
             throw "No streak associated with id " + user_id;
@@ -115,19 +89,5 @@ function shouldUpdateMaxStreak(streak) {
 }
 
 
-// params: string, object, function
-function insertStreak(insertion_data, callback) {
-    db.connect(function(db_connection) {
-        var collection = db_connection.collection(db.streak_collection);
-        collection.insert(insertion_data, function(err, streaks) {
-            if (err) throw err;
-            if (callback) {
-                callback(streaks[0]);
-            }
-        });
-        db_connection.close();
-    });
-}
-
-exports.findOrCreateStreak = findOrCreateStreak;
-exports.updateStreak = updateStreak;
+exports.getStreak = getStreak;
+exports.incrementStreak = incrementStreak;

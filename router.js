@@ -13,7 +13,7 @@ function route(pathname) {
             break;
         default:
             var user_id = parseInt(pathname.substring(1));
-            var record = streak_controller.findOrCreateStreak(user_id, function(record) {
+            var record = streak_controller.getStreak(user_id, function(record) {
                 logStreak(record);
             });
     }

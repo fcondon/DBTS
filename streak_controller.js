@@ -7,11 +7,10 @@
 //          - update a streak when a new day is clicked
 //          - update max streak (or not)
 //          - refactor higher-level functionality into a streak_controller module
+//          - refactor so maybeResetStreak doesn't need to be exported
 
 //          TODO LIST:
-//          - refactor so maybeResetStreak doesn't need to be exported
 //          - write test suite to verify endpoints
-//          - add documentation of how the endpoints work
 
 var time_util = require("./lib/time_util");
 var db = require("./lib/db");

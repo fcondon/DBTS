@@ -64,7 +64,9 @@ function getStreak(user_id, callback) {
     });
 }
 
+// params: int
 function incrementStreak(user_id) {
+    console.log("incrementing streak " + user_id);
     db.findStreak(user_id, function(streak) {
         if (streak) {
             reset = maybeResetStreak(streak); // make sure streak is still valid
@@ -76,7 +78,9 @@ function incrementStreak(user_id) {
                 db.saveStreak(streak);
             }
         } else {
-            throw "No streak associated with id " + user_id;
+            addStreak(function(streak) {
+                console.log("new streak with id = " + streak._id);
+            });
         }
     });
 }

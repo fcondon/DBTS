@@ -1,22 +1,8 @@
-//          DONE LIST:
-//          - find or create streak for a user
-//          - handle new streak creation
-//          - handle existing streak lookup
-//          - check to see whether the streak needs to be reset
-//          - reset a streak
-//          - update a streak when a new day is clicked
-//          - update max streak (or not)
-//          - refactor higher-level functionality into a streak_controller module
-//          - refactor so maybeResetStreak doesn't need to be exported
-
-//          TODO LIST:
-//          - write test suite to verify endpoints
-
 var time_util = require("./lib/time_util");
 var db = require("./lib/db");
 
 function streak(user_id) {
-    this._id = user_id;
+    this.user_id = user_id;
     this.date = null;
     this.streak_count = 0;
     this.max_streak = 0;
@@ -35,7 +21,7 @@ function maybeResetStreak(streak) {
     if (streak.date) {
         last_day = time_util.getLastStreakDate(streak.date, streak.streak_count);
         yesterday = time_util.getYesterday(new Date());
-        console.log("loaded %s, last good streak day = ", streak._id, last_day);
+        console.log("loaded %s, last good streak day = ", streak.user_id, last_day);
         if (time_util.compareDates(yesterday, last_day) > 0) {
             resetStreak(streak);
             return true;
@@ -46,7 +32,7 @@ function maybeResetStreak(streak) {
 
 // params: streak
 function resetStreak(streak) {
-    console.log("Resetting streak " + streak._id);
+    console.log("Resetting streak " + streak.user_id);
     streak.date = null;
     streak.streak_count = 0;
     db.saveStreak(streak);
@@ -72,14 +58,12 @@ function incrementStreak(user_id) {
             reset = maybeResetStreak(streak); // make sure streak is still valid
             if (!reset) {
                 streak.streak_count = streak.streak_count + 1;
-                if (shouldUpdateMaxStreak(streak)) {
-                    streak.max_streak = streak.streak_count;
-                }
+                maybeUpdateMaxStreak(streak);
                 db.saveStreak(streak);
             }
         } else {
             addStreak(function(streak) {
-                console.log("new streak with id = " + streak._id);
+                console.log("new streak with id = " + streak.user_id);
             });
         }
     });
@@ -87,8 +71,10 @@ function incrementStreak(user_id) {
 
 // params: streak
 // return: bool
-function shouldUpdateMaxStreak(streak) {
-    return (streak.streak_count > streak.max_streak);
+function maybeUpdateMaxStreak(streak) {
+    if (streak.streak_count > streak.max_streak) {
+        streak.max_streak = streak.streak_count;
+    }
 }
 
 

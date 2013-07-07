@@ -1,1 +1,3 @@
 *.swp
+*.swo
+public/js/lib/*.js

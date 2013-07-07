@@ -1,5 +1,5 @@
 var assert = require('assert');
-var time_util = require("../lib/time_util");
+var time_util = require("server/lib/time_util");
 
 test_compareDates();
 test_getYesterday();

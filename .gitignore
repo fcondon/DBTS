@@ -1,3 +1,4 @@
 *.swp
 *.swo
 public/js/lib/*.js
+server/node_modules/*

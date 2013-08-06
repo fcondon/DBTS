@@ -10,9 +10,10 @@ function streak(user_id) {
 
 // params: int, function
 function addStreak(user_id, callback) {
-    var new_streak = new streak(user_id); // TODO: wait for user input to create
+    var new_streak = new streak(user_id);
     console.log("new streak: ", new_streak);
     db.insertStreak(new_streak, callback);
+    callback(new_streak);
 }
 
 // params: streak
@@ -41,17 +42,15 @@ function resetStreak(streak) {
 // params: int, function
 function getStreak(user_id, callback) {
     db.findStreak(user_id, function(streak) {
-        if (streak) {
-            maybeResetStreak(streak);
-            callback(streak);
-        } else {
+        if (!streak) {
             console.log("Unrecognized id : " + user_id);
         }
+        callback(streak);
     });
 }
 
 // params: int
-function incrementStreak(user_id) {
+function incrementOrCreateStreak(user_id) {
     console.log("incrementing streak " + user_id);
     db.findStreak(user_id, function(streak) {
         if (streak) {
@@ -62,8 +61,8 @@ function incrementStreak(user_id) {
                 db.saveStreak(streak);
             }
         } else {
-            addStreak(function(streak) {
-                console.log("new streak with id = " + streak.user_id);
+            addStreak(user_id, function(streak) {
+                console.log("new streak with id = " + streak.user_id + " created");
             });
         }
     });
@@ -79,4 +78,5 @@ function maybeUpdateMaxStreak(streak) {
 
 
 exports.getStreak = getStreak;
-exports.incrementStreak = incrementStreak;
+exports.maybeUpdateMaxStreak = maybeUpdateMaxStreak;
+exports.incrementOrCreateStreak = incrementOrCreateStreak;

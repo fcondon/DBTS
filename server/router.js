@@ -9,9 +9,14 @@ function route(pathname) {
             var user_id = parseInt(pathname.substring(1));
             if (user_id) {
                 streak_controller.getStreak(user_id, function(record) {
-                    logStreak(record);
+                    if (record) {
+                        streak_controller.maybeResetStreak(streak);
+                        logStreak(record);
+                    }
+                    streak_controller.incrementOrCreateStreak(user_id);
                 });
             } else {
+                console.log("path = " + pathname);
                 console.log("Should generate user id");
             }
     }

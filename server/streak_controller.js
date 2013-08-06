@@ -1,11 +1,17 @@
 var time_util = require("./lib/time_util");
 var db = require("./lib/db");
 
+// params: int
 function streak(user_id) {
     this.user_id = user_id;
     this.date = null;
     this.streak_count = 0;
     this.max_streak = 0;
+}
+
+// return: int
+function createID() {
+    return 1; //TODO: generate a memorable id hash
 }
 
 // params: int, function
@@ -14,6 +20,12 @@ function addStreak(user_id, callback) {
     console.log("new streak: ", new_streak);
     db.insertStreak(new_streak, callback);
     callback(new_streak);
+}
+
+// params: function
+function createStreak(callback) {
+    var user_id = createID();
+    addStreak(user_id, callback);
 }
 
 // params: streak
@@ -42,7 +54,9 @@ function resetStreak(streak) {
 // params: int, function
 function getStreak(user_id, callback) {
     db.findStreak(user_id, function(streak) {
-        if (!streak) {
+        if (streak) {
+            streak_controller.maybeResetStreak(streak);
+        } else {
             console.log("Unrecognized id : " + user_id);
         }
         callback(streak);
@@ -78,5 +92,5 @@ function maybeUpdateMaxStreak(streak) {
 
 
 exports.getStreak = getStreak;
-exports.maybeUpdateMaxStreak = maybeUpdateMaxStreak;
 exports.incrementOrCreateStreak = incrementOrCreateStreak;
+exports.createStreak = createStreak;

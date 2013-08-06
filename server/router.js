@@ -8,14 +8,15 @@ function route(pathname) {
         case icon:
             console.log("Should serve favicon");
             break;
-        case root:
-            console.log("Should generate a user id");
-            break;
         default:
             var user_id = parseInt(pathname.substring(1));
-            streak_controller.getStreak(user_id, function(record) {
-                logStreak(record);
-            });
+            if (user_id) {
+                streak_controller.getStreak(user_id, function(record) {
+                    logStreak(record);
+                });
+            } else {
+                console.log("Should generate user id");
+            }
     }
 }
 

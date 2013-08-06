@@ -5,9 +5,6 @@ var icon = "/favicon.ico";
 
 function route(pathname) {
     switch (pathname) {
-        case icon:
-            console.log("Should serve favicon");
-            break;
         default:
             var user_id = parseInt(pathname.substring(1));
             if (user_id) {

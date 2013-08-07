@@ -91,6 +91,6 @@ function maybeUpdateMaxStreak(streak) {
 }
 
 
+exports.createStreak = createStreak;
 exports.getStreak = getStreak;
 exports.incrementOrCreateStreak = incrementOrCreateStreak;
-exports.createStreak = createStreak;

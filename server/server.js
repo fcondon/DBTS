@@ -12,14 +12,22 @@ var requestHandler = connect()
     .use(function(request, response){
       var pathname = url.parse(request.url).pathname;
 
-      router.route(pathname);
+      data = router.route(pathname, function(data) {
+          if (data) {
+              console.log("Path = " + pathname + ", Serving API response");
+              response.writeHead(200, {'Content-Type' : 'text/plain'});
+              response.write(data);
+              response.end();
+          } else {
+              console.log("Path = " + pathname + ", Serving page");
+              fs.readFile(asset_path + 'index.html', function(err, file_contents) {
+                  if (err) throw err;
 
-      fs.readFile(asset_path + 'index.html', function(err, file_contents) {
-          if (err) throw err;
-
-          response.writeHead(200, {'Content-Type': 'text/html'});
-          response.write(file_contents);
-          response.end();
+                  response.writeHead(200, {'Content-Type': 'text/html'});
+                  response.write(file_contents);
+                  response.end();
+              });
+          }
       });
     });
 

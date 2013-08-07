@@ -16,7 +16,7 @@ function connect(callback) {
 function findStreak(user_id, callback) {
     connect(function(db_connection) {
         var collection = db_connection.collection(streak_collection);
-        var cursor = collection.find({ "_id" : user_id }).nextObject(function(err, streak) {
+        var cursor = collection.find({ "user_id" : user_id }).nextObject(function(err, streak) {
             if (err) throw err;
             if (callback) {
                 callback(streak);

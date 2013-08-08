@@ -25,7 +25,7 @@ function route(path, callback) {
             }
             break;
         case "new":
-            streak_controller.createStreak(function(streak) {
+            streak_controller.createStreak(user_id, function(streak) {
                 data = (streak) ? "success" : "failure"; // TODO: stub
                 callback(data);
             });

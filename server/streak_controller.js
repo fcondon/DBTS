@@ -55,7 +55,7 @@ function resetStreak(streak) {
 function getStreak(user_id, callback) {
     db.findStreak(user_id, function(streak) {
         if (streak) {
-            streak_controller.maybeResetStreak(streak);
+            maybeResetStreak(streak);
         } else {
             console.log("Unrecognized id : " + user_id);
         }

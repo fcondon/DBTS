@@ -1,7 +1,13 @@
 /* TODO: pre-compile less */
 
-@mid_gray: #8C8C7E;
+/* grays */
+@dark_gray: #333;
+@mid_gray: #666;
+@lite_gray: #999;
+
+/* colors */
 @yellow: #E0EB10;
+@electric_blue: #0077FF;
 
 body {
     font-family: sans-serif;
@@ -9,19 +15,21 @@ body {
 
 #header {
     text-transform: uppercase;
-    color: @mid_gray;
 
     #page_title {
+        color: @electric_blue;
         display: inline-block;
         margin-top: 10px;
         font-size: 60px;
+    }
 
-        #current_count {
-            font-size: 30px;
+    #current_count {
+        color: @mid_gray;
+        font-size: 20px;
 
-            #count_val {
-                color: red;
-            }
+        #count_val {
+            font-size: 40px;
+            font-weight: bold;
         }
     }
 }

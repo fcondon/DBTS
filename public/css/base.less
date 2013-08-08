@@ -1,0 +1,27 @@
+/* TODO: pre-compile less */
+
+@mid_gray: #8C8C7E;
+@yellow: #E0EB10;
+
+body {
+    font-family: sans-serif;
+}
+
+#header {
+    text-transform: uppercase;
+    color: @mid_gray;
+
+    #page_title {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 60px;
+
+        #current_count {
+            font-size: 30px;
+
+            #count_val {
+                color: red;
+            }
+        }
+    }
+}

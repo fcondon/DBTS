@@ -31,7 +31,7 @@ function route(path, callback) {
             });
             break;
         case "update":
-            streak_controller.incrementOrCreateStreak(user_id);
+            streak_controller.updateOrCreateStreak(user_id);
             data = "success"; // TODO: stub
         default:
             callback(data);

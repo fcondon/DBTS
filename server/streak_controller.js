@@ -63,16 +63,22 @@ function getStreak(user_id, callback) {
     });
 }
 
+// params: streak
+function incrementStreak(streak) {
+    console.log("incrementing streak " + streak.user_id);
+    streak.streak_count = streak.streak_count + 1;
+    maybeUpdateMaxStreak(streak);
+    db.saveStreak(streak);
+}
+
 // params: int
-function incrementOrCreateStreak(user_id) {
+function updateOrCreateStreak(user_id) {
     console.log("incrementing streak " + user_id);
     db.findStreak(user_id, function(streak) {
         if (streak) {
             reset = maybeResetStreak(streak); // make sure streak is still valid
             if (!reset) {
-                streak.streak_count = streak.streak_count + 1;
-                maybeUpdateMaxStreak(streak);
-                db.saveStreak(streak);
+                incrementStreak(streak); // TODO: verify that streak should be incremented
             }
         } else {
             addStreak(user_id, function(streak) {
@@ -93,4 +99,4 @@ function maybeUpdateMaxStreak(streak) {
 
 exports.createStreak = createStreak;
 exports.getStreak = getStreak;
-exports.incrementOrCreateStreak = incrementOrCreateStreak;
+exports.updateOrCreateStreak = updateOrCreateStreak;

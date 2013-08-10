@@ -30,9 +30,16 @@ function createID() {
 
 // params: int, function
 function addStreakForUserID(user_id, callback) {
-    var new_streak = new streak(user_id);
-    db.insertStreak(new_streak, callback);
-    callback(new_streak);
+    db.findStreak(user_id, function(existing_streak) {
+        if (existing_streak) {
+            console.log("Tried to add duplicate streak for user_id " + user_id);
+            callback(existing_streak);
+        } else {
+            var new_streak = new streak(user_id);
+            db.insertStreak(new_streak, callback);
+            callback(new_streak);
+        }
+    });
 }
 
 

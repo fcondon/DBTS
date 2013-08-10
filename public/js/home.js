@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+    // number of days not in the streak for padding
+    var date_buffer = 3;
+
     var id = location.pathname.substr(1);
     if (parseInt(id)) {
         var get_url = '/get/' + id;
@@ -13,15 +16,47 @@ $(document).ready(function() {
         success: function(data) {
             var streak = JSON.parse(data);
 
-            // get template
+            // get header template
             $.ajax({
                 url: '../templates/header.handlebars',
                 success: function(header_source) {
-                    var template = Handlebars.compile(header_source);
-                    $('#header').html(template({ 'streak_count' : streak.streak_count }));
+                    var header_tpl = Handlebars.compile(header_source);
+                    $('#header').html(header_tpl({ 'streak_count' : streak.streak_count }));
+                }
+            });
+
+            // get calendar template
+            $.ajax({
+                url: '../templates/calendar.handlebars',
+                success: function(cal_source) {
+                    var cal_template = Handlebars.compile(cal_source);
+                    var streak_days = getStreakDays(hydrateDate(streak.date), streak.streak_count);
+                    $('#calendar').html(cal_template({ 'days' : streak_days }));
                 }
             });
         }
     });
+
+    function getStreakDays(date, streak_len) {
+        var first_day = new Date(date); // deep copy
+        var last_day = new Date(date);
+        last_day.setDate(last_day.getDate() + streak_len);
+
+        var days = [];
+
+        date.setDate(date.getDate() - date_buffer);
+        for (var i = 0; i < (streak_len + (2 * date_buffer)); i++) {
+            var valid = (date >= first_day && date < last_day);
+            days.push({ 'date' : date.getDate() , 'valid' : valid});
+
+            // hand to god, this works
+            date.setDate(date.getDate() + 1);
+        }
+        return days;
+    }
+
+    function hydrateDate(stored_date) {
+        return new Date(stored_date.year, stored_date.month, stored_date.day);
+    }
 
 });

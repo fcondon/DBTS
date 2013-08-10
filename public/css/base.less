@@ -2,8 +2,8 @@
 
 /* grays */
 @dark_gray: #333;
-@mid_gray: #666;
-@lite_gray: #999;
+@mid_gray: #888;
+@lite_gray: #CCC;
 
 /* colors */
 @yellow: #E0EB10;
@@ -31,5 +31,17 @@ body {
             font-size: 40px;
             font-weight: bold;
         }
+    }
+}
+
+#calendar {
+
+    span.calendar_day {
+        font-size: 50px;
+        color: @lite_gray;
+    }
+
+    span.active_day {
+        color: @yellow;
     }
 }

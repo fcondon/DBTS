@@ -54,7 +54,7 @@ function getStreak(user_id, callback) {
 /* Functions for updating existing streaks */
 
 // params: int
-function updateOrCreateStreak(user_id) {
+function updateOrCreateStreak(user_id, callback) {
     db.findStreak(user_id, function(streak) {
         if (streak) {
             reset = maybeResetStreak(streak);   // make sure streak is still valid
@@ -63,9 +63,11 @@ function updateOrCreateStreak(user_id) {
                     incrementStreak(streak);
                 }
             }
+            callback(streak);
         } else {
             addStreakForUserID(user_id, function(streak) {
                 console.log("New streak with id = " + streak.user_id + " created");
+                callback(streak);
             });
         }
     });

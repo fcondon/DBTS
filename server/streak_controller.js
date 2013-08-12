@@ -115,7 +115,7 @@ function maybeResetStreak(streak) {
         last_day = time_util.getLastStreakDate(streak.date, streak.streak_count);
         yesterday = time_util.getYesterday(new Date());
         console.log("Loaded %s, last good streak day = ", streak.user_id, last_day);
-        if (time_util.compareDates(yesterday, last_day) > 0) {
+        if (time_util.compareDates(yesterday, last_day) >= 0) {
             resetStreak(streak);
             return true;
         }

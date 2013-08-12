@@ -6,8 +6,7 @@
 @lite_gray: #CCC;
 
 /* colors */
-@yellow: #E0EB10;
-@electric_blue: #0077FF;
+@yellow: #EBF21B;
 
 body {
     font-family: sans-serif;
@@ -17,9 +16,10 @@ body {
     text-transform: uppercase;
 
     #page_title {
-        color: @electric_blue;
+        color: @yellow;
         display: inline-block;
         margin-top: 10px;
+        margin-bottom: 20px;
         font-size: 60px;
     }
 
@@ -28,6 +28,7 @@ body {
         font-size: 20px;
 
         #count_val {
+            color: @yellow;
             font-size: 40px;
             font-weight: bold;
         }
@@ -37,11 +38,17 @@ body {
 #calendar {
 
     span.calendar_day {
-        font-size: 50px;
+        font-size: 30px;
         color: @lite_gray;
     }
 
+    #today {
+        cursor: pointer;
+        font-size: 50px;
+    }
+
     span.active_day {
+        font-size: 50px;
         color: @yellow;
     }
 }

@@ -1,5 +1,5 @@
 {{#each days}}
-    <span class="calendar_day {{#if this.valid}} active_day {{/if}}">
+    <span class="calendar_day {{#if this.active}} active_day {{/if}}" {{#if this.today}} id="today" {{/if}}>
         {{this.date}}
     </span>
 {{/each}}

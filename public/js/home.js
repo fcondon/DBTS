@@ -6,6 +6,7 @@ $(document).ready(function() {
     var id = location.pathname.substr(1);
     if (parseInt(id)) {
         var get_url = '/get/' + id;
+        var update_url = '/update/' + id;
     } else {
         // TODO: no ID
     }
@@ -32,22 +33,33 @@ $(document).ready(function() {
                     var cal_template = Handlebars.compile(cal_source);
                     var streak_days = getStreakDays(hydrateDate(streak.date), streak.streak_count);
                     $('#calendar').html(cal_template({ 'days' : streak_days }));
+                    $('#today').click(function(e) {
+                        console.log("today");
+                        $.ajax({
+                            url: update_url,
+                            success: function(streak) {
+                                console.log(streak);
+                            }
+                        });
+                    });
                 }
             });
         }
     });
 
     function getStreakDays(date, streak_len) {
-        var first_day = new Date(date); // deep copy
-        var last_day = new Date(date);
+        var today = new Date();                 // fresh instance
+        var first_day = new Date(date);         // deep copy
+        var last_day = new Date(date);          // modified copy
         last_day.setDate(last_day.getDate() + streak_len);
 
         var days = [];
 
         date.setDate(date.getDate() - date_buffer);
-        for (var i = 0; i < (streak_len + (2 * date_buffer)); i++) {
-            var valid = (date >= first_day && date < last_day);
-            days.push({ 'date' : date.getDate() , 'valid' : valid});
+        for (var i = 0; i < (streak_len + (200 * date_buffer)); i++) {
+            var is_active = (date >= first_day && date < last_day);
+            var is_today = (date.toLocaleDateString() == today.toLocaleDateString());
+            days.push({ 'date' : date.getDate() , 'active' : is_active, 'today' : is_today });
 
             // hand to god, this works
             date.setDate(date.getDate() + 1);

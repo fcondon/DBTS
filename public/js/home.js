@@ -34,7 +34,6 @@ $(document).ready(function() {
                     var streak_days = getStreakDays(hydrateDate(streak.date), streak.streak_count);
                     $('#calendar').html(cal_template({ 'days' : streak_days }));
                     $('#today').click(function(e) {
-                        console.log("today");
                         $.ajax({
                             url: update_url,
                             success: function(streak) {
@@ -48,6 +47,9 @@ $(document).ready(function() {
     });
 
     function getStreakDays(date, streak_len) {
+        if (!date) {
+            date = new Date();
+        }
         var today = new Date();                 // fresh instance
         var first_day = new Date(date);         // deep copy
         var last_day = new Date(date);          // modified copy
@@ -68,7 +70,10 @@ $(document).ready(function() {
     }
 
     function hydrateDate(stored_date) {
-        return new Date(stored_date.year, stored_date.month, stored_date.day);
+        if (stored_date) {
+            return new Date(stored_date.year, stored_date.month, stored_date.day);
+        }
+        return null;
     }
 
 });

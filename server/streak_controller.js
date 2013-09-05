@@ -64,10 +64,15 @@ function getStreak(user_id, callback) {
 function updateOrCreateStreak(user_id, callback) {
     db.findStreak(user_id, function(streak) {
         if (streak) {
-            reset = maybeResetStreak(streak);   // make sure streak is still valid
-            if (!reset) {
-                if (shouldIncrement(streak)) {
-                    incrementStreak(streak);
+            if (!streak.date) {
+                streak.date = time_util.getStorableDate(new Date());
+                incrementStreak(streak);
+            } else {
+                reset = maybeResetStreak(streak);   // make sure streak is still valid
+                if (!reset) {
+                    if (shouldIncrement(streak)) {
+                        incrementStreak(streak);
+                    }
                 }
             }
             callback(streak);

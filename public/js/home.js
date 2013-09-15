@@ -22,7 +22,7 @@ $(document).ready(function() {
                 url: '../templates/header.handlebars',
                 success: function(header_source) {
                     var header_tpl = Handlebars.compile(header_source);
-                    $('#header').html(header_tpl({ 'streak_count' : streak.streak_count }));
+                    $('#header').html(header_tpl({ 'streak_count' : streak.streak_count , 'streak_high' : streak.max_streak }));
                 }
             });
 
@@ -33,11 +33,12 @@ $(document).ready(function() {
                     var cal_template = Handlebars.compile(cal_source);
                     var streak_days = getStreakDays(hydrateDate(streak.date), streak.streak_count);
                     $('#calendar').html(cal_template({ 'days' : streak_days }));
-                    $('#today').click(function(e) {
+                    var today = $('#today');
+                    today.click(function(e) {
                         $.ajax({
                             url: update_url,
                             success: function(streak) {
-                                console.log(streak);
+                                today.css('color', '#EBF21B');
                             }
                         });
                     });

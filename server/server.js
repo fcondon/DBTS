@@ -3,7 +3,7 @@ var connect = require('connect');
 var url     = require('url');
 var router  = require("./router");
 
-var asset_path = '../public/';
+var asset_path = 'public/';
 
 var requestHandler = connect()
     .use(connect.favicon(asset_path + 'favicon.ico'))

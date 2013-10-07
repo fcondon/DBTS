@@ -8,15 +8,14 @@ var retries = 3;
 // params: function
 function connect(callback, tries) {
     if (tries < retries) {
-        try {
-            MongoClient.connect(db_path, function(err, db) {
-                // don't start no shit, won't be no shit
-                if (err) throw err;
+        MongoClient.connect(db_path, function(err, db) {
+            // don't start no shit, won't be no shit
+            if (err) {
+                handleDBError(err);
+            } else {
                 callback(db);
-            });
-        } catch (err) {
-            handleDBError(err);
-        }
+            }
+        });
     } else {
         throw "Could not connect to DB";
     }

@@ -33,11 +33,24 @@ $(document).ready(function() {
                     var cal_template = Handlebars.compile(cal_source);
                     var streak_days = getStreakDays(hydrateDate(streak.date), streak.streak_count);
                     $('#calendar').html(cal_template({ 'days' : streak_days }));
+
                     var today = $('#today');
                     today.click(function(e) {
                         $.ajax({
                             url: update_url,
                             success: function(streak) {
+                                var current_count = $('#current_count');
+                                var all_time_count = $('#all_time_count');
+
+                                // update displayed counts
+                                var curr = parseInt(current_count.html()) + 1;
+                                var all_time = parseInt(all_time_count.html());
+                                if (curr > all_time) {
+                                    replaceHtml(all_time_count, curr);
+                                }
+                                replaceHtml(current_count, curr);
+
+                                // hightlight today's date
                                 today.css('color', '#EBF21B');
                             }
                         });
@@ -75,6 +88,13 @@ $(document).ready(function() {
             return new Date(stored_date.year, stored_date.month, stored_date.day);
         }
         return null;
+    }
+
+    function replaceHtml(element, data) {
+        element.fadeOut('fast', function() {
+            element.html(data);
+            element.fadeIn('fast');
+        });
     }
 
 });

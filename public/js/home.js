@@ -20,6 +20,9 @@ $(document).ready(function() {
         });
     }
 
+
+
+
     // pulls streak info for a given ID
     function getStreakData(id, callback) {
         var get_url = '/get/' + id;
@@ -61,17 +64,10 @@ $(document).ready(function() {
 
     // gets a new ID from the server
     function getNewID(callback) {
-        var id_url = '/id/'; // TODO
+        var new_url = '/new/';
         $.ajax({
-            url: id_url,
-            success: function(id) {
-                var new_url = '/new/' + id;
-
-                $.ajax({
-                    url: new_url,
-                    success: callback
-                });
-             }
+            url: new_url,
+            success: callback
         });
     }
 

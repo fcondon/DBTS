@@ -2,7 +2,8 @@ $(document).ready(function() {
 
     // number of days not in the streak for padding
     var pre_date_buffer = 3;
-    var post_date_buffer = 500;
+    var post_date_buffer = 200;
+    var month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     var id = location.pathname.substr(1);
     if (parseInt(id)) {
@@ -84,7 +85,8 @@ $(document).ready(function() {
             days.push({ 'date' : date.getDate(),
                         'active' : is_active,
                         'today' : is_today,
-                        'month_start' : is_start_of_month
+                        'month_start' : is_start_of_month,
+                        'month_name' : month_names[date.getMonth()]
             });
 
             // hand to god, this works

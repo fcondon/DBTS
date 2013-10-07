@@ -38,17 +38,21 @@ $(document).ready(function() {
                     today.click(function(e) {
                         $.ajax({
                             url: update_url,
-                            success: function(streak) {
+                            success: function(record) {
+                                streak = $.parseJSON(record);
                                 var current_count = $('#current_count');
                                 var all_time_count = $('#all_time_count');
 
                                 // update displayed counts
-                                var curr = parseInt(current_count.html()) + 1;
-                                var all_time = parseInt(all_time_count.html());
-                                if (curr > all_time) {
-                                    replaceHtml(all_time_count, curr);
+                                var curr = parseInt(current_count.html());
+                                if (streak.streak_count > curr) {
+                                    curr += 1;
+                                    var all_time = parseInt(all_time_count.html());
+                                    if (curr > all_time) {
+                                        replaceHtml(all_time_count, curr);
+                                    }
+                                    replaceHtml(current_count, curr);
                                 }
-                                replaceHtml(current_count, curr);
 
                                 // hightlight today's date
                                 today.css('color', '#EBF21B');

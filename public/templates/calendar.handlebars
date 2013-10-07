@@ -1,5 +1,10 @@
+<span>...</span>
 {{#each days}}
+    {{#if this.month_start}}
+        <span class="calendar_month"> // </span>
+    {{/if}}
     <span class="calendar_day {{#if this.active}} active_day {{/if}}" {{#if this.today}} id="today" {{/if}}>
         {{this.date}}
     </span>
 {{/each}}
+<span>...</span>

@@ -1,7 +1,8 @@
 $(document).ready(function() {
 
     // number of days not in the streak for padding
-    var date_buffer = 3;
+    var pre_date_buffer = 3;
+    var post_date_buffer = 500;
 
     var id = location.pathname.substr(1);
     if (parseInt(id)) {
@@ -75,11 +76,16 @@ $(document).ready(function() {
 
         var days = [];
 
-        date.setDate(date.getDate() - date_buffer);
-        for (var i = 0; i < (streak_len + (200 * date_buffer)); i++) {
+        date.setDate(date.getDate() - pre_date_buffer);
+        for (var i = 0; i < (streak_len + (post_date_buffer)); i++) {
             var is_active = (date >= first_day && date < last_day);
             var is_today = (date.toLocaleDateString() == today.toLocaleDateString());
-            days.push({ 'date' : date.getDate() , 'active' : is_active, 'today' : is_today });
+            var is_start_of_month = (date.getDate() == 1);
+            days.push({ 'date' : date.getDate(),
+                        'active' : is_active,
+                        'today' : is_today,
+                        'month_start' : is_start_of_month
+            });
 
             // hand to god, this works
             date.setDate(date.getDate() + 1);

@@ -1,5 +1,3 @@
-// TODO: debug periodic shutdowns
-
 var http    = require('http');
 var connect = require('connect');
 var url     = require('url');

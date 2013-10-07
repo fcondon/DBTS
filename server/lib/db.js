@@ -11,7 +11,7 @@ function connect(callback, tries) {
         MongoClient.connect(db_path, function(err, db) {
             // don't start no shit, won't be no shit
             if (err) {
-                handleDBError(err);
+                handleDBError(err, callback, tries);
             } else {
                 callback(db);
             }

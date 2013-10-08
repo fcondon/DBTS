@@ -16,16 +16,14 @@ function route(path, callback) {
     path = path.substr(1); // trim first slash
     var path_elements = path.split('/');
     var action = path_elements.shift();
-    var user_id = path_elements.shift();
+    var user_id = sanitizeID(path_elements.shift());
 
     switch (action) {
         case "get":
             // get the streak data
             if (user_id) {
                 streak_controller.getStreak(user_id, function(record) {
-                    if (record) {
-                        success = true;
-                    }
+                    success = true;
                     callback(success, JSON.stringify(record), content_type_plain);
                 });
             } else {
@@ -56,6 +54,17 @@ function route(path, callback) {
                 callback(true, file_contents, content_type_html);
             });
     }
+}
+
+// this functionality is duped on the client side in home.js, update both if you update either
+function sanitizeID(id) {
+    if (!id) {
+        return "";
+    }
+    id = id.toString();
+    var acceptablePattern = /[A-Z|a-z|0-9]{1,10}/;
+    var match = acceptablePattern.exec(id);
+    return match.toString();
 }
 
 exports.route = route;

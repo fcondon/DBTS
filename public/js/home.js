@@ -6,7 +6,7 @@ $(document).ready(function() {
     // english month names
     var month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    var id = location.pathname.substr(1);
+    var id = sanitizeID(location.pathname.substr(1));
     if (id) {
         getStreakData(id, function(record) {
             var streak = $.parseJSON(record);
@@ -150,6 +150,16 @@ $(document).ready(function() {
             element.html(data);
             element.fadeIn('fast');
         });
+    }
+
+    function sanitizeID(id) {
+        if (!id) {
+            return "";
+        }
+        id = id.toString();
+        var acceptablePattern = /[A-Z|a-z|0-9]{1,10}/;
+        var match = acceptablePattern.exec(id);
+        return match.toString();
     }
 
 });

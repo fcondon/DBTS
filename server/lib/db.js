@@ -1,3 +1,6 @@
+//TODO: sanitize everything
+//TODO: really kill lingering connection errors
+
 var MongoClient = require('mongodb').MongoClient
     , format = require('util').format;
 var db_path = 'mongodb://127.0.0.1:27017/streakdb';
@@ -17,7 +20,7 @@ function connect(callback, tries) {
             }
         });
     } else {
-        throw "Could not connect to DB";
+        throw "Could not connect to DB (tries = " + tries + ")";
     }
 }
 

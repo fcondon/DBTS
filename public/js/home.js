@@ -22,7 +22,6 @@ $(document).ready(function() {
 
 
 
-
     // pulls streak info for a given ID
     function getStreakData(id, callback) {
         var get_url = '/get/' + id;
@@ -40,7 +39,12 @@ $(document).ready(function() {
             url: '../templates/header.handlebars',
             success: function(header_source) {
                 var header_tpl = Handlebars.compile(header_source);
-                $('#header').html(header_tpl({ 'streak_count' : streak.streak_count , 'streak_high' : streak.max_streak }));
+                $('#header').html(header_tpl({  'streak_count' : streak.streak_count,
+                                                'streak_high' : streak.max_streak,
+                                                'url' : window.location.host + '/' + streak.user_id,
+                                                'new_streak' : (streak.max_streak == 0)
+                }));
+                $('#new_user_info').slideDown();
             }
         });
     }

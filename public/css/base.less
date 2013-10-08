@@ -13,9 +13,9 @@ body {
 }
 
 #header {
-    text-transform: uppercase;
 
     #page_title {
+        text-transform: uppercase;
         color: @yellow;
         display: inline-block;
         margin-top: 10px;
@@ -24,6 +24,7 @@ body {
     }
 
     #count_info {
+        text-transform: uppercase;
         display: inline-block;
         color: @mid_gray;
         font-size: 20px;
@@ -32,6 +33,21 @@ body {
             color: @yellow;
             font-size: 40px;
             font-weight: bold;
+        }
+    }
+
+    #new_user_info {
+        display: none;
+        background-color: @dark_gray;
+        color: white;
+        font-weight: strong;
+        font-size: 20px;
+        padding: 10px;
+        margin: 0 25px 15px 25px;
+        border-radius: 10px;
+
+        a {
+            color: @yellow;
         }
     }
 }
@@ -48,6 +64,7 @@ body {
     }
 
     span.calendar_day {
+        padding: 0px 15px;
         cursor: default;
         color: @lite_gray;
     }
@@ -55,6 +72,11 @@ body {
     #today {
         cursor: pointer;
         font-size: 110px;
+
+        border-style: solid;
+        border-width: 3px;
+        border-color: @yellow;
+        border-radius: 7px;
     }
 
     span.active_day {

@@ -29,7 +29,7 @@ function handleDBError(err, callback, tries) {
 
     // retry
     tries++;
-    connect(callback, handleDBError, tries);
+    connect(callback, tries);
 }
 
 // params: int, function

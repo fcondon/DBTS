@@ -7,8 +7,8 @@ $(document).ready(function() {
     var month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     var id = location.pathname.substr(1);
-    if (parseInt(id)) {
-        getStreakData(parseInt(id), function(record) {
+    if (id) {
+        getStreakData(id, function(record) {
             var streak = $.parseJSON(record);
             renderHeader(streak);
             renderCalendar(streak);

@@ -1,6 +1,6 @@
 var time_util = require("./lib/time_util");
 var db = require("./lib/db");
-
+var crypto = require("./lib/sha1");
 
 /* Defines the data model for a streak object */
 
@@ -17,7 +17,7 @@ function streak(user_id) {
 
 // params: function
 function createStreak(user_id, callback) {
-    if (!parseInt(user_id)) {
+    if (!user_id) {
         user_id = createID();
     }
     addStreakForUserID(user_id, callback);
@@ -25,7 +25,17 @@ function createStreak(user_id, callback) {
 
 // return: int
 function createID() {
-    return 1; //TODO: generate a memorable id hash
+    var seed = Math.random();
+    var hash = crypto.sha1(seed.toString()).toString();
+    var id = hash.substring(0,5);
+    console.log("New ID: %s", id);
+    db.findStreak(id, function(existing_streak) {
+        if (existing_streak) {
+            console.log("Duplicate ID: %s", id);
+            return createID();
+        }
+    });
+    return id;
 }
 
 // params: int, function

@@ -16,7 +16,7 @@ function route(path, callback) {
     path = path.substr(1); // trim first slash
     var path_elements = path.split('/');
     var action = path_elements.shift();
-    var user_id = parseInt(path_elements.shift());
+    var user_id = path_elements.shift();
 
     switch (action) {
         case "get":
@@ -24,7 +24,6 @@ function route(path, callback) {
             if (user_id) {
                 streak_controller.getStreak(user_id, function(record) {
                     if (record) {
-                        logStreak(record);
                         success = true;
                     }
                     callback(success, JSON.stringify(record), content_type_plain);
@@ -57,10 +56,6 @@ function route(path, callback) {
                 callback(true, file_contents, content_type_html);
             });
     }
-}
-
-function logStreak(record) {
-    console.log("Streak = " + record.streak_count);
 }
 
 exports.route = route;

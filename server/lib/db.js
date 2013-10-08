@@ -31,7 +31,6 @@ function handleDBError(err, callback, tries) {
 
 // params: int, function
 function findStreak(user_id, callback) {
-    console.log('finding ' + user_id);
     connect(function(db_connection) {
         var collection = db_connection.collection(streak_collection);
         var cursor = collection.find({ "user_id" : user_id }).nextObject(function(err, streak) {

@@ -10,8 +10,12 @@ $(document).ready(function() {
     if (id) {
         getStreakData(id, function(record) {
             var streak = $.parseJSON(record);
-            renderHeader(streak);
-            renderCalendar(streak);
+            if (streak) {
+                renderHeader(streak);
+                renderCalendar(streak);
+            } else {
+                renderNotFound(id);
+            }
         });
     } else {
         getNewID(function(record) {
@@ -62,6 +66,17 @@ $(document).ready(function() {
                 $('#today').click(function(e) {
                     maybeUpdateStreak();
                 });
+            }
+        });
+    }
+
+    // compiles the "id not found" template
+    function renderNotFound(id) {
+        $.ajax({
+            url: '../templates/notfound.handlebars',
+            success: function(notfound_source) {
+                var notfound_source = Handlebars.compile(notfound_source);
+                $('#error').html(notfound_source({ 'id' : id }));
             }
         });
     }

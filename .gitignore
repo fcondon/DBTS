@@ -2,3 +2,4 @@
 *.swo
 public/js/lib/*
 server/node_modules/*
+server/lib/sha1.js
